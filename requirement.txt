@@ -1,0 +1,10 @@
+gurobipy
+networkx
+pulp
+pandas
+numpy
+scipy
+matplotlib
+
+fastapi==0.70.0
+uvicorn==0.15.0
