@@ -13,7 +13,7 @@ services:
   db:
       image: arm64v8/mysql:8.0  #arm64に対応するイメージを使用する。
       #image: mysql:8.0  #intelの場合はこちらを使用する。
-      #platform: linux/x86_64  # AppleシリコンのMac（M1/M2など）の場合必要
+      #platform: linux/x86_64  # この行は、「AppleシリコンのMac（M1/M2など）の場合必要」という理由で記載されていたが、arm64ではうまくいかない。
       environment:
         MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'  # rootアカウントをパスワードなしで作成
         MYSQL_DATABASE: 'demo'  # 初期データベースとしてdemoを設定
