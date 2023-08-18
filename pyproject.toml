@@ -1,0 +1,24 @@
+[tool.poetry]
+name = "demo-app"
+version = "0.1.0"
+description = ""
+authors = ["Your Name <you@example.com>"]
+readme = "README.md"
+packages = [{include = "demo_app"}]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+fastapi = "^0.101.1"
+uvicorn = {extras = ["standard"], version = "^0.23.2"}
+pulp = "^2.7.0"
+pandas = "^2.0.3"
+numpy = "^1.25.2"
+python-multipart = "^0.0.6"
+sqlalchemy = "^2.0.20"
+pymysql = "^1.1.0"
+aiomysql = "^0.2.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

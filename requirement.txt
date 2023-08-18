@@ -1,10 +1,8 @@
-gurobipy
-networkx
-pulp
-pandas
-numpy
-scipy
-matplotlib
+pulp==2.7.0
+pandas==2.0.3
+numpy==1.25.2
 
 fastapi==0.70.0
 uvicorn==0.15.0
+
+python-multipart==0.0.6

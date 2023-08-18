@@ -2,8 +2,29 @@ import pandas as pd
 import numpy as np
 import pulp
 import typing as tp
+from pydantic.dataclasses import dataclass
+from pydantic import BaseModel as PydanticBaseModel
+from pydantic import conint, validator
+from dataclasses import dataclass
 
+import api.schemas.optimize as optimize_schema
+
+class BaseModel(PydanticBaseModel):
+    class Config:
+        arbitrary_types_allowed = True
+
+# TODO :本当はpydanticのBaseModelを継承して、コンストラクタ引数の内容をvalidateしたいが、以下のオブジェクト生成時になぜかdf_request_tableがNoneになってしまう。
+#暫定で以下の実装としている。詳細は、docsを確認。
+@dataclass
 class ScheduleOptimizer():
+    df_request_table:pd.DataFrame
+    n_member_day_:conint(strict=True, ge=1)
+
+    # TODO :シフトの希望表に関するDataframeのvalidationを実装する。
+    @validator("df_request_table")
+    def check_df_request_table(cls, df_request_table):
+        pass
+
     @property
     def request_table(self) -> np.ndarray:
         return self.df_request_table.values.T
@@ -19,10 +40,6 @@ class ScheduleOptimizer():
     @property
     def n_member_day(self) -> int:
         return self.n_member_day_
-
-    def __init__(self, df_request_table:pd.DataFrame, n_member_day:int) -> None:
-        self.df_request_table:pd.DataFrame = df_request_table
-        self.n_member_day_:int = n_member_day
 
     def optimize(self) -> pd.DataFrame:
         df_schedule:pd.DataFrame = pd.DataFrame(columns=self.days, index=np.arange(self.n_member_day))
@@ -53,6 +70,10 @@ class ScheduleOptimizer():
             df_schedule[d] = [self.members[j] for j, x in enumerate(shift[i]) if x == 1]
 
         return df_schedule
+    
+    @staticmethod
+    def generate_optimizer(optimize_body:optimize_schema.RequestedSchedule) -> "ScheduleOptimizer":
+        return ScheduleOptimizer(df_request_table=optimize_body.generate_df(), n_member_day_=optimize_body.n_member_day)
 
 # TODO :サンプルcsvを作るだけなので、他に移動したい。
 def generate_sample_csv() -> tp.Union[int, pd.DataFrame]:
