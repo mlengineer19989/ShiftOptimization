@@ -1,16 +1,24 @@
 #追加ライブラリ
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 
 
 #自作モジュール
-from .routers import task, done, optimize
+from api.routers import task, done, optimize
 
 app = FastAPI()
 app.include_router(task.router)
 app.include_router(done.router)
 app.include_router(optimize.router)
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"]
+)
 
 
 if __name__ == "__main__":
