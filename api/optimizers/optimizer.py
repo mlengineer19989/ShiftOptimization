@@ -4,7 +4,7 @@ import pulp
 import typing as tp
 from pydantic.dataclasses import dataclass
 from pydantic import BaseModel as PydanticBaseModel
-from pydantic import conint, validator
+from pydantic import conint, field_validator
 from dataclasses import dataclass
 
 import api.schemas.optimize as optimize_schema
@@ -21,7 +21,7 @@ class ScheduleOptimizer():
     n_member_day_:conint(strict=True, ge=1)
 
     # TODO :シフトの希望表に関するDataframeのvalidationを実装する。
-    @validator("df_request_table")
+    @field_validator("df_request_table")
     def check_df_request_table(cls, df_request_table):
         pass
 

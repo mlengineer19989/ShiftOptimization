@@ -1,5 +1,5 @@
 from fastapi import UploadFile, File
-from pydantic import Field, validator, conint
+from pydantic import Field, field_validator, conint
 from pydantic import BaseModel as PydanticBaseModel
 import typing as tp
 import pandas as pd
@@ -19,7 +19,7 @@ class RequestedSchedule(BaseModel):
         self.upload_file = upload_file
 
     # TODO: upload_file.fileの形式がcsvであることもvalidationしたい。
-    @validator("upload_file")
+    @field_validator("upload_file")
     def check_upload_file(cls, upload_file):
         pass
 
