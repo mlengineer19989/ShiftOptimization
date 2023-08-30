@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 import pulp
 import typing as tp
+import platform
 from pydantic.dataclasses import dataclass
 from pydantic import BaseModel as PydanticBaseModel
 from pydantic import conint, field_validator
@@ -61,8 +62,13 @@ class ScheduleOptimizer():
             problem += pulp.lpSum(list(zip(*x_dm))[j]) >= self.n_member_day * len(self.days) // len(self.members)
             problem += pulp.lpSum(list(zip(*x_dm))[j]) <= self.n_member_day * len(self.days) // len(self.members) + 1
 
-        # 解決
-        problem.solve()
+        # M1 Macのdockerコンテナ内で実行可能とするため。
+        if (platform.machine()=="aarch64") and (platform.system()=='Linux'):
+            path_to_solver = '/usr/bin/cbc'
+            solver = pulp.COIN_CMD(path=path_to_solver)
+            problem.solve(solver)
+        else:
+            problem.solve()
 
         # 最適化結果から、シフトを作成
         shift = [list(map(lambda x: int(x.value()), x_d)) for x_d in x_dm]
